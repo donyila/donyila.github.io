@@ -1,22 +1,26 @@
 name: directory-listing
 on: [push]
+
 jobs:
-  pages-directory-listing:
+  generate-index:
     runs-on: ubuntu-latest
-    name: Directory Listings Index
+    name: Generate Directory Listings
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4          # Optional: bump checkout too
+
       - name: Generate Directory Listings
         uses: jayanta525/github-pages-directory-listing@v3.0.0
         with:
-          FOLDER: data # Change this to your target directory
+          FOLDER: .   # or 'data' if you prefer
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3   # Updated from v1
         with:
-          path: 'data'
+          path: '.'
+
   deploy:
-    needs: pages-directory-listing
+    needs: generate-index
     permissions:
       pages: write
       id-token: write
@@ -26,4 +30,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4             # Updated from v1
